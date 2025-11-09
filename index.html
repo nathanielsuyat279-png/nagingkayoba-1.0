@@ -75,7 +75,7 @@
       object-position: center;
       pointer-events: none;
     }
-
+    
     /* Extra highlight if question is special */
     .highlight-question {
       font-size: 2.8em;
@@ -85,7 +85,7 @@
   </style>
 </head>
 <body>
-<p id="question"><span class="small-word">Is 5 + 3 equal to 8?</span> </p>
+<p id="question"><span class="small-word">Is 5 + 3 equal to 8?</span> <p>
   <div class="choices">
     <label><input type="radio" name="answer" value="Yes"> Yes</label>
     <label><input type="radio" name="answer" value="No"> No</label>
@@ -101,60 +101,59 @@
     </video>
   </div>
 
-  <script>
-    const questions = [
-      { q: "Is 5 + 3 equal to 8?", correct: "Yes" },
-      { q: "Naging Kayo Ba?", correct: "No" }
-    ];
+<script>
+  const questions = [
+    { q: "Is 5 + 3 equal to 8?", correct: "Yes" },
+    { q: "Naging Kayo Ba?", correct: "No" }
+  ];
 
-    let currentQuestion = 0;
+  let currentQuestion = 0;
 
-    function submitAnswer() {
-      const selected = document.querySelector('input[name="answer"]:checked');
-      const resultBox = document.getElementById("result");
-      const videoBox = document.getElementById("videoContainer");
-      const questionText = document.getElementById("question");
-      const video = document.getElementById("quizVideo");
-      const choices = document.querySelector(".choices");
-      const submitBtn = document.getElementById("submitBtn");
+  function submitAnswer() {
+    const selected = document.querySelector('input[name="answer"]:checked');
+    const resultBox = document.getElementById("result");
+    const videoBox = document.getElementById("videoContainer");
+    const questionText = document.getElementById("question");
+    const video = document.getElementById("quizVideo");
+    const choices = document.querySelector(".choices");
+    const submitBtn = document.getElementById("submitBtn");
 
-      if (!selected) {
-        resultBox.textContent = "Choose an answer first.";
-        resultBox.style.color = "yellow";
-        return;
-      }
-
-      if (selected.value === questions[currentQuestion].correct) {
-        resultBox.textContent = "Correct!";
-        resultBox.style.color = "lime";
-        videoBox.style.display = "block";
-
-        video.muted = false;
-        video.play().catch(() => {
-          console.log("Autoplay with sound blocked by browser.");
-        });
-
-        choices.style.display = "none";
-        submitBtn.style.display = "none";
-
-        if (questions[currentQuestion].q === "Naging Kayo Ba?") {
-          questionText.textContent = "Naging Kayo Ba?";
-          questionText.classList.add("highlight-question");
-        }
-
-      } else {
-        resultBox.textContent = "Wrong! Try again.";
-        resultBox.style.color = "red";
-        videoBox.style.display = "none";
-      }
-
-      currentQuestion++;
-      if (currentQuestion >= questions.length) {
-        currentQuestion = 0;
-      }
-      questionText.textContent = questions[currentQuestion].q;
-      document.querySelectorAll('input[name="answer"]').forEach(r => r.checked = false);
+    if (!selected) {
+      resultBox.textContent = "Choose an answer first.";
+      resultBox.style.color = "yellow";
+      return;
     }
-  </script>
+
+    if (selected.value === questions[currentQuestion].correct) {
+      resultBox.textContent = "Correct!";
+      resultBox.style.color = "lime";
+      videoBox.style.display = "block";
+
+      video.muted = false;
+      video.play().catch(() => {
+        console.log("Autoplay with sound blocked by browser.");
+      });
+
+      choices.style.display = "none";
+      submitBtn.style.display = "none";
+
+      if (questions[currentQuestion].q === "Naging Kayo Ba?") {
+        questionText.classList.add("highlight-question");
+      }
+
+      // Move to next question only if correct
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        questionText.textContent = questions[currentQuestion].q;
+        document.querySelectorAll('input[name="answer"]').forEach(r => r.checked = false);
+      }
+      
+    } else {
+      resultBox.textContent = "Wrong! Try again.";
+      resultBox.style.color = "red";
+      // Do not change question, keep currentQuestion as is
+    }
+  }
+</script>
 </body>
 </html>
